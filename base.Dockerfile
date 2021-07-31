@@ -1,5 +1,5 @@
 FROM archlinux as root
-RUN pacman -Syu --noconfirm git sudo base-devel \
+RUN pacman -Syu --noconfirm git openssh sudo base-devel \
     && useradd -m -u 1000 updater \
     && echo 'updater ALL=(ALL) NOPASSWD:ALL' > /etc/sudoers.d/updater
 
