@@ -3,5 +3,8 @@ minimum_version = "0.26.0"
 
 [nitpick.styles]
 include = [
-    "https://raw.githubusercontent.com/andreoliwa/nitpick/develop/styles/editorconfig.toml"
+    "gh://andreoliwa/nitpick/styles/editorconfig.toml",
+    "pre-commit/main.toml",
+    "pre-commit/general.toml",
+    "pre-commit/bash.toml",
 ]
