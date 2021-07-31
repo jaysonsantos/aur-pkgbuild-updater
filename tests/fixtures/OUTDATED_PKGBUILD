@@ -1,0 +1,20 @@
+pkgname=test-package
+pkgver=0.1.0
+pkgrel=0
+arch=('x86_64')
+license=('MIT')
+depends=(
+  'pacman>5'
+)
+source=("http://aur-test.localtest.me:43987/${pkgver}/${pkgname%-bin}-${pkgver}.tar.gz")
+sha256sums=('05ff181d1eb3e5a40b54f0d2988facff7b4768bcb7da4e94fadf92332f3b42b5')
+
+check() {
+  cd $srcdir
+  bash test.sh
+}
+
+package() {
+  mkdir -p "${pkgdir}/usr/bin"
+  install "${srcdir}/${pkgname}" "${pkgdir}/usr/bin/${pkgname}"
+}
