@@ -1,7 +1,7 @@
 use camino::Utf8PathBuf;
 use color_eyre::{
     eyre::{eyre, WrapErr},
-    Result,
+    Result, Section, SectionExt,
 };
 use futures::StreamExt;
 use lazy_static::lazy_static;
@@ -150,12 +150,15 @@ impl Package {
             .output()
             .await?;
 
-        if !response.status.success() {
-            return Err(eyre!("failed to run helper script"));
-        }
         let helper_output = String::from_utf8_lossy(&response.stdout);
+        if !response.status.success() {
+            let stderr = String::from_utf8_lossy(&response.stderr);
+            return Err(eyre!("failed to run helper script")
+                .section(helper_output.to_string().header("Stdout"))
+                .section(stderr.to_string().header("Stderr")));
+        }
         for line in helper_output.lines() {
-            let mut components = line.split("=");
+            let mut components = line.split('=');
             let variable = components
                 .next()
                 .map(|v| v.trim())
@@ -337,7 +340,7 @@ mod tests {
         Mock, MockServer, ResponseTemplate,
     };
 
-    use crate::write_helper_script;
+    use crate::{setup_error_handlers, write_helper_script};
 
     use super::{calculate_hash, Package, CACHE_DIR};
 
@@ -381,7 +384,8 @@ mod tests {
 
     #[tokio::test]
     async fn test_package_process() {
-        write_helper_script().await.ok();
+        setup_error_handlers().ok();
+        write_helper_script().await.unwrap();
         let listener = std::net::TcpListener::bind("127.0.0.1:43987").unwrap();
         listener
             .local_addr()

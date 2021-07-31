@@ -29,9 +29,15 @@ lazy_static! {
     static ref PROJECT_DIR: ProjectDirs =
         ProjectDirs::from("com", "Jayson Reis", env!("CARGO_PKG_NAME"))
             .expect("failed to determine project directory");
-    pub static ref CACHE_DIR: Utf8PathBuf = Utf8Path::from_path(PROJECT_DIR.cache_dir())
-        .unwrap()
-        .to_path_buf();
+    pub static ref CACHE_DIR: Utf8PathBuf = {
+        let dir = Utf8Path::from_path(PROJECT_DIR.cache_dir())
+            .unwrap()
+            .to_path_buf();
+        if !dir.exists() {
+            ::std::fs::create_dir_all(&dir).expect("failed to create cache directory");
+        }
+        dir
+    };
     pub static ref HELPER_SCRIPT: Utf8PathBuf = CACHE_DIR.join("helper.sh");
 }
 
