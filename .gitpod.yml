@@ -8,6 +8,10 @@ tasks:
     init: cargo clippy
   - name: Release
     init: cargo build --release
+  - name: Docker images
+    init: |
+      docker build -f base.Dockerfile -t aur-autoupdater-base .
+      docker build -f tests.Dockerfile -t aur-autoupdater-tests .
 vscode:
   extensions:
     - matklad.rust-analyzer
