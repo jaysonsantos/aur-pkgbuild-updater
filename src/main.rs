@@ -70,6 +70,7 @@ arg_enum! {
 async fn main() -> Result<()> {
     setup_error_handlers()?;
     let args = Arguments::from_args();
+    write_helper_script().await?;
 
     match args {
         Arguments::ProcessPackage { package_name } => process_package(&package_name).await?,
@@ -86,8 +87,6 @@ async fn main() -> Result<()> {
             println!("{}", json_output);
         }
     }
-
-    write_helper_script().await?;
 
     Ok(())
 }
