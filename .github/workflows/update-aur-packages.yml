@@ -1,0 +1,65 @@
+---
+name: Update AUR packages
+
+"on":
+  workflow_dispatch: {}
+  schedule:
+    - cron: "5 4 * * *"
+
+env:
+  HOME: /home/updater
+
+jobs:
+  collect_packages:
+    runs-on: ubuntu-latest
+    container:
+      # image: ${{ needs.guess_docker_image.outputs.docker_image }}
+      image: ghcr.io/${{ github.repository }}:main
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+
+    steps:
+      - name: Collect packages
+        id: set-matrix
+        run: >
+          set -eo pipefail
+
+          echo "::set-output name=matrix::$(
+          aur-autoupdater
+          list-user-packages
+          --username jaysonsantos
+          --output-type json
+          )"
+  process_package:
+    runs-on: ubuntu-latest
+    container:
+      # image: ${{ needs.guess_docker_image.outputs.docker_image }}
+      image: ghcr.io/${{ github.repository }}:main
+    needs:
+      - collect_packages
+    env:
+      GIT_CONFIG: ${{ secrets.GIT_CONFIG }}
+      SSH_KEY: ${{ secrets.SSH_KEY }}
+    strategy:
+      max-parallel: 2
+      fail-fast: false
+      matrix:
+        package: ${{ fromJSON(needs.collect_packages.outputs.matrix) }}
+    steps:
+      - name: Configure git
+        run: |
+          echo $GIT_CONFIG ~/.gitconfig
+          mkdir -p ~/.ssh
+          echo "$SSH_KEY" >> ~/.ssh/aur
+          chmod 400 ~/.ssh/aur
+          cat >> ~/.ssh/config <<EOF
+          Host aur.archlinux.org
+            IdentityFile ~/.ssh/aur
+            User aur
+          EOF
+          ssh-keyscan aur.archlinux.org >> ~/.ssh/known_hosts
+      - name: Process package
+        run: >
+          aur-autoupdater
+          process-package
+          --package-name ${{ matrix.package }}

@@ -99,6 +99,7 @@ impl Package {
         }
         let status = Command::new("git")
             .arg("clone")
+            .arg("-v")
             .arg(&self.repository)
             .arg(&self.clone_directory)
             .status()
