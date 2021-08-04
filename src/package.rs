@@ -236,7 +236,7 @@ impl Package {
         fs::write(&pkg_build_file, contents).await?;
 
         let response = Command::new("makepkg")
-            .args(&["--clean", "--force", "--syncdeps"])
+            .args(&["--clean", "--force", "--syncdeps", "--noconfirm"])
             .env("PACMAN", "yay") // Use yay so it can handle AUR dependencies
             .env("PACMAN_AUTH", "nice") // Small hack so makepkg doesn't try to use sudo
             .current_dir(&self.clone_directory)
