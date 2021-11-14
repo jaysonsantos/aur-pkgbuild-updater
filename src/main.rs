@@ -1,5 +1,6 @@
 mod commands;
 mod package;
+mod version;
 mod version_checker;
 
 use camino::{Utf8Path, Utf8PathBuf};

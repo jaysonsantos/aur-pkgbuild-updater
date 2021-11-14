@@ -6,12 +6,13 @@ use color_eyre::{
 use futures::StreamExt;
 use lazy_static::lazy_static;
 use scraper::Selector;
-use semver::Version;
-use serde::{Deserialize, Serialize};
+
+use serde::Deserialize;
 use sha2::{Digest, Sha256};
 use tokio::{fs, process::Command};
 use tracing::{info, instrument, trace};
 
+use crate::version::LenientVersion;
 use crate::{version_checker::get_version_checker, CACHE_DIR, CLIENT, HELPER_SCRIPT};
 
 pub const VERSION_PLACEHOLDER: &str = "_VERSION_PLACEHOLDER_";
@@ -20,12 +21,12 @@ lazy_static! {
     static ref PROJECTS_SELECTOR: Selector = Selector::parse(".results td:nth-child(1) a").unwrap();
 }
 
-#[derive(Debug, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, PartialEq, Deserialize)]
 pub struct Package {
     pub name: String,
     repository: String,
     clone_directory: Utf8PathBuf,
-    current_version: Option<Version>,
+    current_version: Option<LenientVersion>,
     current_download_url: Option<String>,
     current_sha2_digest: Option<String>,
 }
@@ -50,7 +51,7 @@ impl Package {
         }
     }
 
-    #[instrument(skip(self), fields(name=self.name.as_str()))]
+    #[instrument(skip(self), fields(name = self.name.as_str()))]
     pub async fn process(&mut self) -> Result<()> {
         info!("Processing");
         self.clone_repository().await?;
@@ -58,7 +59,7 @@ impl Package {
         self.parse_pkgbuild().await?;
         if let Some(new_version) = self.update().await? {
             self.commit(&new_version).await?;
-            self.push().await?;
+            // self.push().await?;
         }
 
         Ok(())
@@ -143,7 +144,7 @@ impl Package {
         Ok(())
     }
 
-    #[instrument(skip(self), fields(name=self.name.as_str()))]
+    #[instrument(skip(self), fields(name = self.name.as_str()))]
     async fn parse_pkgbuild(&mut self) -> Result<()> {
         let response = Command::new("bash")
             .arg(&*HELPER_SCRIPT)
@@ -172,7 +173,7 @@ impl Package {
                 .to_string();
             match variable {
                 "pkgver" => {
-                    let parsed_version = lenient_semver::parse(&value)
+                    let parsed_version = LenientVersion::parse(&value)
                         .map_err(|e| eyre!("failed to parse version with {:?} {:?}", value, e))?;
                     self.current_version = Some(parsed_version)
                 }
@@ -205,7 +206,7 @@ impl Package {
         self.clone_directory.join(".SRCINFO")
     }
 
-    #[instrument(skip(self), fields(name=%self.name))]
+    #[instrument(skip(self), fields(name = % self.name))]
     async fn update(&self) -> Result<Option<String>> {
         let current_download_url = self.current_download_url.as_ref().unwrap();
         let mut version_checker = get_version_checker(
@@ -229,7 +230,10 @@ impl Package {
         let remote_hash = calculate_hash(version_checker.get_download_url().unwrap()).await?;
         info!(message = "Updating version", %current_version, %current_hash, %remote_version, %remote_hash);
         let contents = contents
-            .replace(&current_version.to_string(), &remote_version.to_string())
+            .replace(
+                &current_version.original_value(),
+                remote_version.original_value(),
+            )
             .replace(&current_hash, &remote_hash);
 
         trace!(message = "Final PKGBUILD file", %contents);
