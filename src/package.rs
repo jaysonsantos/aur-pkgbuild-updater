@@ -229,11 +229,9 @@ impl Package {
         let current_hash = self.current_sha2_digest.as_ref().unwrap().as_str();
         let remote_hash = calculate_hash(version_checker.get_download_url().unwrap()).await?;
         info!(message = "Updating version", %current_version, %current_hash, %remote_version, %remote_hash);
+        let clean = remote_version.clean_original_value();
         let contents = contents
-            .replace(
-                &current_version.original_value(),
-                remote_version.original_value(),
-            )
+            .replace(&current_version.original_value(), clean)
             .replace(&current_hash, &remote_hash);
 
         trace!(message = "Final PKGBUILD file", %contents);

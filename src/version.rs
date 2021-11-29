@@ -1,9 +1,10 @@
-use semver::Version;
-use serde::de::{Error, Visitor};
-use serde::{Deserialize, Deserializer};
 use std::cmp::Ordering;
 use std::fmt::{Debug, Display, Formatter};
 use std::hash::{Hash, Hasher};
+
+use semver::Version;
+use serde::de::{Error, Visitor};
+use serde::{Deserialize, Deserializer};
 
 #[derive(Debug, Clone)]
 pub struct LenientVersion(Version, String);
@@ -18,6 +19,13 @@ impl LenientVersion {
 
     pub fn original_value(&self) -> &str {
         &self.1
+    }
+
+    pub fn clean_original_value(&self) -> &str {
+        match self.1.as_bytes()[..2] {
+            [b'v', b'0'..=b'9'] => &self.1[1..],
+            _ => &self.1,
+        }
     }
 }
 
@@ -75,5 +83,21 @@ impl<'de> Deserialize<'de> for LenientVersion {
             }
         }
         deserializer.deserialize_str(VersionDeserializer)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::version::LenientVersion;
+
+    #[test]
+    fn test_clean_version() {
+        let values = ["v2.0.0", "2.0.0"];
+        for value in values {
+            assert_eq!(
+                "2.0.0",
+                LenientVersion::parse(value).unwrap().clean_original_value()
+            );
+        }
     }
 }
