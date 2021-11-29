@@ -1,11 +1,12 @@
 use async_trait::async_trait;
 use color_eyre::{eyre::eyre, Result};
-use semver::Version;
+
 use serde::Deserialize;
 use tracing::{debug, instrument};
 use url::Url;
 
 use super::VersionCheck;
+use crate::version::LenientVersion;
 use crate::{package::VERSION_PLACEHOLDER, CLIENT};
 
 #[derive(Debug)]
@@ -13,23 +14,23 @@ pub struct Github {
     github_base_url: String,
     organization: String,
     repository: String,
-    current_version: Version,
-    remote_version: Option<Version>,
+    current_version: LenientVersion,
+    remote_version: Option<LenientVersion>,
     remote_url: Option<String>,
 }
 
 impl Github {
-    pub fn new(url: &Url, current_version: Version) -> Result<Self> {
+    pub fn new(url: &Url, current_version: LenientVersion) -> Result<Self> {
         Self::with_default_github_url(url, current_version)
     }
 
-    fn with_default_github_url(url: &Url, current_version: Version) -> Result<Self> {
+    fn with_default_github_url(url: &Url, current_version: LenientVersion) -> Result<Self> {
         Self::with_github_url(url, current_version, "https://api.github.com".to_string())
     }
 
     fn with_github_url(
         url: &Url,
-        current_version: Version,
+        current_version: LenientVersion,
         github_base_url: String,
     ) -> Result<Self> {
         let mut path = url.path().split('/');
@@ -61,13 +62,13 @@ impl Github {
         );
         let response = CLIENT.get(&releases_url).send().await?;
         let releases: Vec<Release> = response.json().await?;
-        let mut latest_version: Option<Version> = None;
+        let mut latest_version: Option<LenientVersion> = None;
         let mut download_url: Option<String> = None;
 
         debug!("found {} release", releases.len());
 
         for release in &releases {
-            if let Ok(tag_name) = lenient_semver::parse(&release.tag_name).as_ref() {
+            if let Ok(tag_name) = LenientVersion::parse(&release.tag_name).as_ref() {
                 debug!("checking tag {}", tag_name);
                 for asset in &release.assets {
                     let file_name =
@@ -104,7 +105,7 @@ impl Github {
         debug!("found {} tags", tags.len());
 
         for tag in &tags {
-            if let Ok(tag_name) = lenient_semver::parse(&tag.name).as_ref() {
+            if let Ok(tag_name) = LenientVersion::parse(&tag.name).as_ref() {
                 debug!("checking tag {}", tag_name);
                 if let Some(current_latest_version) = latest_version.as_ref() {
                     if tag_name > current_latest_version {
@@ -163,11 +164,11 @@ impl VersionCheck for Github {
         self.do_fetch_last_version(file_template).await
     }
 
-    fn get_current_version(&self) -> &Version {
+    fn get_current_version(&self) -> &LenientVersion {
         &self.current_version
     }
 
-    fn get_remote_version(&self) -> Option<&Version> {
+    fn get_remote_version(&self) -> Option<&LenientVersion> {
         self.remote_version.as_ref()
     }
 
@@ -180,7 +181,6 @@ impl VersionCheck for Github {
 mod tests {
     use std::env::set_var;
 
-    use semver::Version;
     use serde_json::json;
     use wiremock::{
         matchers::{method, path},
@@ -188,6 +188,7 @@ mod tests {
     };
 
     use super::{Github, VersionCheck};
+    use crate::version::LenientVersion;
     use crate::{package::VERSION_PLACEHOLDER, setup_error_handlers};
 
     #[tokio::test]
@@ -211,14 +212,14 @@ mod tests {
                 &"https://github.com/jaysonsantos/mambembe/releases/tag/0.1.0"
                     .parse()
                     .unwrap(),
-                Version::parse("0.1.0").unwrap(),
+                LenientVersion::parse("0.1.0").unwrap(),
                 mock_server.uri(),
             )
             .unwrap(),
         );
 
-        let current_version = "0.1.0".parse().unwrap();
-        let remote_version = "0.1.1".parse().unwrap();
+        let current_version = LenientVersion::parse("0.1.0").unwrap();
+        let remote_version = LenientVersion::parse("0.1.1").unwrap();
 
         github.fetch_last_version(&format!("https://github.com/jaysonsantos/mambembe/releases/download/{0}/mambembe-cli-with-keyring-{0}-x86_64-unknown-linux-gnu.tar.gz", VERSION_PLACEHOLDER)).await.unwrap();
         assert!(github.has_newer_version());

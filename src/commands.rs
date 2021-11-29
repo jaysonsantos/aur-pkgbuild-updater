@@ -31,7 +31,7 @@ pub async fn process_user(username: &str) -> Result<()> {
 
 #[instrument]
 pub async fn list_user_packages(username: &str) -> Result<Vec<Package>> {
-    Package::parse_packages(&URL.replace("username", &username)).await
+    Package::parse_packages(&URL.replace("username", username)).await
 }
 
 #[instrument]
