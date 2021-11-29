@@ -50,7 +50,6 @@ jobs:
         run: |
           set -ex
           echo ${{ matrix.package }}
-          exit 1
           echo $GIT_CONFIG ~/.gitconfig
           mkdir -p ~/.ssh
           echo "$SSH_KEY" >> ~/.ssh/aur
