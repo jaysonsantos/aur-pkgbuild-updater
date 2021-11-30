@@ -141,7 +141,7 @@ impl Project {
 #[cfg(test)]
 mod tests {
     use std::env::set_var;
-    use std::{fs};
+    use std::fs;
 
     use wiremock::matchers::{method, path};
     use wiremock::{Mock, MockServer, ResponseTemplate};

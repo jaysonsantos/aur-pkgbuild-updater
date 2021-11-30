@@ -59,7 +59,7 @@ impl Package {
         self.parse_pkgbuild().await?;
         if let Some(new_version) = self.update().await? {
             self.commit(&new_version).await?;
-            // self.push().await?;
+            self.push().await?;
         }
 
         Ok(())

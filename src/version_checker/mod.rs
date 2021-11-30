@@ -72,7 +72,6 @@ mod tests {
     use crate::version::LenientVersion;
     use async_trait::async_trait;
     use color_eyre::Result;
-    
 
     use super::{get_version_checker, VersionCheck};
 
