@@ -9,7 +9,7 @@ repository = "https://github.com/jaysonsantos/aur-autoupdater"
 [dependencies]
 async-trait = "0.1.52"
 camino = { version = "1.0.5", features = ["serde1"] }
-color-eyre = "0.5.11"
+color-eyre = "0.6.0"
 directories = "4.0.1"
 futures = "0.3.19"
 lazy_static = "1.4.0"
