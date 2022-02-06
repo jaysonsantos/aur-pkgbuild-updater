@@ -11,7 +11,7 @@ async-trait = "0.1.52"
 camino = { version = "1.0.7", features = ["serde1"] }
 color-eyre = "0.6.0"
 directories = "4.0.1"
-futures = "0.3.19"
+futures = "0.3.21"
 lazy_static = "1.4.0"
 lenient_semver = "0.4.2"
 reqwest = { version = "0.11.9", features = ["json", "stream"] }
