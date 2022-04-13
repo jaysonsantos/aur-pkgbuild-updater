@@ -82,14 +82,10 @@ impl Package {
 
     fn parse_packages_from_html(body: &str) -> Vec<Package> {
         let users_page = scraper::Html::parse_document(body);
-        let projects: Vec<String> = users_page
+        users_page
             .select(&PROJECTS_SELECTOR)
-            .map(|a| a.text().collect())
-            .collect();
-
-        projects
-            .iter()
-            .map(|project| Package::new(project))
+            .map(|a| a.text().collect::<String>().trim().to_string())
+            .map(|project| Package::new(&project))
             .collect()
     }
 
@@ -355,9 +351,9 @@ mod tests {
             .await
             .unwrap();
         let packages = Package::parse_packages_from_html(&fixture);
-        assert_eq!(packages.len(), 6);
-        assert_eq!(packages[0].name, "balde");
-        assert_eq!(packages[0].repository, "aur.archlinux.org:balde.git");
+        assert_eq!(packages.len(), 10);
+        assert_eq!(packages[0].name, "act-bin");
+        assert_eq!(packages[0].repository, "aur.archlinux.org:act-bin.git");
     }
 
     async fn setup_test_repository() -> TempDir {

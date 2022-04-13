@@ -1,314 +1,760 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
- "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xml:lang="en" lang="en">
-  <head>
-    <title>AUR (en) - Search Criteria: jaysonsantos</title>
-	<link rel='stylesheet' type='text/css' href='/css/archweb.css' />
-	<link rel='stylesheet' type='text/css' href='/css/aurweb.css' />
-	<link rel='shortcut icon' href='/images/favicon.ico' />
-	<link rel='alternate' type='application/rss+xml' title='Newest Packages RSS' href='/rss/' />
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-  </head>
-	<body>
-		<div id="archnavbar" class="anb-aur">
-			<div id="archnavbarlogo"><h1><a href="/" title="Return to the main page">Arch Linux User Repository</a></h1></div>
-			<div id="archnavbarmenu">
-				<ul id="archnavbarlist">
-					<li id="anb-home"><a href="https://www.archlinux.org/" title="Arch news, packages, projects and more">Home</a></li>
-					<li id="anb-packages"><a href="https://www.archlinux.org/packages/" title="Arch Package Database">Packages</a></li>
-					<li id="anb-forums"><a href="https://bbs.archlinux.org/" title="Community forums">Forums</a></li>
-					<li id="anb-wiki"><a href="https://wiki.archlinux.org/" title="Community documentation">Wiki</a></li>
-					<li id="anb-bugs"><a href="https://bugs.archlinux.org/" title="Report and track bugs">Bugs</a></li>
-					<li id="anb-security"><a href="https://security.archlinux.org/" title="Arch Linux Security Tracker">Security</a></li>
-					<li id="anb-aur"><a href="/" title="Arch Linux User Repository">AUR</a></li>
-					<li id="anb-download"><a href="https://www.archlinux.org/download/" title="Get Arch Linux">Download</a></li>
-				</ul>
-			</div>
-		</div><!-- #archnavbar -->
+      xml:lang="en" lang="en" >
+    <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
-		<div id="content">
-			<div id="lang_sub">
-				<form method="post" action="/packages/?K=jaysonsantos&amp;SeB=m">
-					<fieldset>
-						<div>
-							<select name="setlang" id="id_setlang">
-		<option value="ar">العربية</option>
-<option value="ast">Asturianu</option>
-<option value="ca">Català</option>
-<option value="cs">Český</option>
-<option value="da">Dansk</option>
-<option value="de">Deutsch</option>
-<option value="en" selected="selected">English</option>
-<option value="el">Ελληνικά</option>
-<option value="es">Español</option>
-<option value="es_419">Español (Latinoamérica)</option>
-<option value="fi">Suomi</option>
-<option value="fr">Français</option>
-<option value="he">עברית</option>
-<option value="hr">Hrvatski</option>
-<option value="hu">Magyar</option>
-<option value="it">Italiano</option>
-<option value="ja">日本語</option>
-<option value="nb">Norsk</option>
-<option value="nl">Nederlands</option>
-<option value="pl">Polski</option>
-<option value="pt_BR">Português (Brasil)</option>
-<option value="pt_PT">Português (Portugal)</option>
-<option value="ro">Română</option>
-<option value="ru">Русский</option>
-<option value="sk">Slovenčina</option>
-<option value="sr">Srpski</option>
-<option value="tr">Türkçe</option>
-<option value="uk">Українська</option>
-<option value="zh_CN">简体中文</option>
-<option value="zh_TW">正體中文</option>
-							</select>
-							<input type="submit" value="Go" />
-						</div>
-					</fieldset>
-				</form>
-			</div>
-			<div id="archdev-navbar">
-				<ul>
-											<li><a href="/">AUR Home</a></li>
-						<li><a href="/packages/">Packages</a></li>
-						<li><a href="/register/">Register</a></li>
-												<li><a href="/login/">Login</a></li>
-															</ul>
-			</div><!-- #archdev-navbar -->
-			<!-- Start of main content -->
+    <!-- CSS -->
+    <link rel="stylesheet" href="/static/css/archweb.css">
+    <link rel="stylesheet" href="/static/css/aurweb.css">
 
+    <!-- Resources -->
+    <link rel="shortcut icon" href="/static/images/favicon.ico">
 
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
-<script type="text/javascript">
-function collapseDependsList(list) {
-	list = $(list);
-	// Hide everything past a given limit. Don't do anything if we don't have
-	// enough items, or the link already exists.
-	var limit = 20,
-		linkid = list.attr('id') + 'link',
-		items = list.find('li').slice(limit);
-	if (items.length <= 1 || $('#' + linkid).length > 0) {
-		return;
-	}
-	items.hide();
-	list.after('<p><a id="' + linkid + '" href="#">Show More…</a></p>');
+    <!-- Alternate resources -->
+    <link rel="alternate" type="application/rss+xml"
+          title="Newest Packages RSS" href="/rss">
 
-	// add link and wire it up to show the hidden items
-	$('#' + linkid).click(function(event) {
-		event.preventDefault();
-		list.find('li').show();
-		// remove the full <p/> node from the DOM
-		$(this).parent().remove();
-	});
-}
+    <!-- Include local typeahead -->
+    <script type="text/javascript" src="/static/js/typeahead.js"></script>
 
-function collapseComment(div) {
-	var linkid = div.attr('id') + 'link',
-		inner = div.find('div'),
-		height = inner.height(),
-		maxheight = 200;
+    <title>AUR (en) - Packages</title>
+</head>
 
-	if (height <= maxheight)
-		return;
-
-	inner.css({ 'overflow': 'hidden', 'height': maxheight + 'px' });
-	inner.addClass('collapsed');
-	inner.after('<p><a id="' + linkid + '" href="#">Show More…</a></p>');
-
-	$('#' + linkid).click(function(event) {
-		var inner = $(this).parent().parent().find('div');
-		var newheight;
-
-		if (inner.hasClass('collapsed')) {
-			inner.css({ 'height': 'auto' });
-			newheight = inner.height();
-			inner.css({ 'height': maxheight });
-			$(this).text('Collapse');
-		} else {
-			newheight = maxheight;
-			$(this).text('Show More…');
-		}
-
-		inner.animate({ 'height': newheight });
-		inner.toggleClass('collapsed');
-		event.preventDefault();
-	});
-}
-
-$(document).ready(function() {
-	collapseDependsList("#pkgdepslist");
-	collapseDependsList("#pkgreqslist");
-	collapseDependsList("#pkgsrcslist");
-	$(".article-content").each(function() {
-		collapseComment($(this));
-	});
-});
-</script>
-
-
-<div id="pkglist-search" class="box filter-criteria">
-<h2>Search Criteria</h2>
-
-<form action='/packages/' method='get'>
-	<p><input type='hidden' name='O' value='0' /></p>
-
-	<fieldset>
-		<legend>Enter search criteria</legend>
-		<div>
-			<label for="id_method">Search by</label>
-			<select name='SeB'>
-												<option value="nd">Name, Description</option>
-																<option value="n">Name Only</option>
-																<option value="b">Package Base</option>
-																<option value="N">Exact Name</option>
-																<option value="B">Exact Package Base</option>
-																<option value="k">Keywords</option>
-																<option value="m" selected="selected">Maintainer</option>
-																<option value="c">Co-maintainer</option>
-																<option value="M">Maintainer, Co-maintainer</option>
-																<option value="s">Submitter</option>
-											</select>
-		</div>
-		<div>
-			<label for="id_q">Keywords</label>
-			<input type='text' name='K' size='30' value="jaysonsantos" maxlength='35'  />
-		</div>
-		<div>
-			<label for="id_out_of_date">Out of Date</label>
-			<select name='outdated'>
-												<option value=''>All</option>
-																<option value='on'>Flagged</option>
-																<option value='off'>Not Flagged</option>
-											</select>
-		</div>
-		<div>
-			<label for="id_sort_by">Sort by</label>
-			<select name='SB'>
-												<option value='n'>Name</option>
-																<option value='v'>Votes</option>
-																<option value='p'>Popularity</option>
-																<option value='w'>Voted</option>
-																<option value='o'>Notify</option>
-																<option value='m'>Maintainer</option>
-																<option value='l'>Last modified</option>
-											</select>
-		</div>
-		<div>
-			<label for="id_order_by">Sort order</label>
-			<select name='SO'>
-												<option value='a'>Ascending</option>
-																<option value='d'>Descending</option>
-											</select>
-		</div>
-		<div>
-			<label for="id_per_page">Per page</label>
-			<select name='PP'>
-												<option value="50">50</option>
-																<option value="100">100</option>
-																<option value="250">250</option>
-											</select>
-		</div>
-		<div>
-			<label>&nbsp;</label>
-			<input type='submit' class='button' name='do_Search' value='Go' />
-			<input type='submit' class='button' name='do_Orphans' value='Orphans' />
-		</div>
-	</fieldset>
-</form>
+    <body>
+        <div id="archnavbar" class="anb-aur">
+    <div id="archnavbarlogo">
+        <h1>
+            <a href="/" title="Return to the main page">Arch Linux User Repository</a>
+        </h1>
+    </div>
+    <div id="archnavbarmenu">
+        <ul id="archnavbarlist">
+            <li id="anb-home"><a href="https://www.archlinux.org/" title="Arch news, packages, projects and more">Home</a></li>
+            <li id="anb-packages"><a href="https://www.archlinux.org/packages/" title="Arch Package Database">Packages</a></li>
+            <li id="anb-forums"><a href="https://bbs.archlinux.org/" title="Community forums">Forums</a></li>
+            <li id="anb-wiki"><a href="https://wiki.archlinux.org/" title="Community documentation">Wiki</a></li>
+            <li id="anb-bugs"><a href="https://bugs.archlinux.org/" title="Report and track bugs">Bugs</a></li>
+            <li id="anb-security"><a href="https://security.archlinux.org/" title="Arch Linux Security Tracker">Security</a></li>
+            <li id="anb-aur"><a href="/" title="Arch Linux User Repository">AUR</a></li>
+            <li id="anb-download"><a href="https://www.archlinux.org/download/" title="Get Arch Linux">Download</a></li>
+        </ul>
+    </div>
 </div>
-<div id="pkglist-results" class="box">		<div class="pkglist-stats">
-		<p>
-			6 packages found.			Page 1 of 1.		</p>
-			</div>
-	
-	<form id="pkglist-results-form" method="post" action="/pkgbase/?K=jaysonsantos&amp;SeB=m">
-		<table class="results">
-		<thead>
-			<tr>
-								<th><a href="?K=jaysonsantos&amp;SeB=m&amp;SB=n&amp;SO=d">Name</a></th>				<th>Version</th>				<th><a href="?K=jaysonsantos&amp;SeB=m&amp;SB=v&amp;SO=d">Votes</a></th>				<th><a href="?K=jaysonsantos&amp;SeB=m&amp;SB=p&amp;SO=d">Popularity</a><span title="Popularity is calculated as the sum of all votes with each vote being weighted with a factor of 0.98 per day since its creation." class="hover-help"><sup>?</sup></span></th>								<th>Description</th>				<th><a href="?K=jaysonsantos&amp;SeB=m&amp;SB=m&amp;SO=d">Maintainer</a></th>			</tr>
-		</thead>
-		<tbody>
+        <div id="content">
+    <div id="lang_sub">
+    <form method="post" action="/language">
+        <fieldset>
+            <div>
+                <select id="id_setlang" name="set_lang">
 
-			<tr class="odd">
-				<td><a href="/packages/balde/">balde</a></td>
-		<td>0.1.2-2</td>
-		<td>0</td>
-		<td>0.00</td>
-				<td class="wrap">A microframework for C based on GLib and bad intentions.</td>
-		<td>
-						<a href="/packages/?K=jaysonsantos&amp;SeB=m">jaysonsantos</a>
-						</td>
-	</tr>
-			<tr class="even">
-				<td><a href="/packages/gossm-bin/">gossm-bin</a></td>
-		<td>1.3.3-1</td>
-		<td>0</td>
-		<td>0.00</td>
-				<td class="wrap">Interactive CLI tool that you can connect to ec2 using commands same as start-session, ssh in AWS SSM Session Manager</td>
-		<td>
-						<a href="/packages/?K=jaysonsantos&amp;SeB=m">jaysonsantos</a>
-						</td>
-	</tr>
-			<tr class="odd">
-				<td><a href="/packages/mambembe-cli-without-keyring-bin/">mambembe-cli-without-keyring-bin</a></td>
-		<td>0.1.1-0</td>
-		<td>0</td>
-		<td>0.00</td>
-				<td class="wrap">Opensource Authy command line client (without keyring support)</td>
-		<td>
-						<a href="/packages/?K=jaysonsantos&amp;SeB=m">jaysonsantos</a>
-						</td>
-	</tr>
-			<tr class="even">
-				<td><a href="/packages/nitpick/">nitpick</a></td>
-		<td>0.26.0-1</td>
-		<td>0</td>
-		<td>0.00</td>
-				<td class="wrap">Enforce the same settings across multiple language-independent projects</td>
-		<td>
-						<a href="/packages/?K=jaysonsantos&amp;SeB=m">jaysonsantos</a>
-						</td>
-	</tr>
-			<tr class="odd">
-				<td><a href="/packages/python-autorepr/">python-autorepr</a></td>
-		<td>0.3.0-1</td>
-		<td>0</td>
-		<td>0.00</td>
-				<td class="wrap">Makes civilized __repr__, __str__, and __unicode__ methods</td>
-		<td>
-						<a href="/packages/?K=jaysonsantos&amp;SeB=m">jaysonsantos</a>
-						</td>
-	</tr>
-			<tr class="even">
-				<td><a href="/packages/python-configupdater/">python-configupdater</a></td>
-		<td>2.0-1</td>
-		<td>0</td>
-		<td>0.00</td>
-				<td class="wrap">Parser like ConfigParser but for updating configuration files</td>
-		<td>
-						<a href="/packages/?K=jaysonsantos&amp;SeB=m">jaysonsantos</a>
-						</td>
-	</tr>
-	
-		</tbody>
-		</table>
+                    <option
+                        value="ar"
 
-				<div class="pkglist-stats">
-			<p>
-				6 packages found.				Page 1 of 1.			</p>
-					</div>
+                    >
+                        العربية
+                    </option>
 
-					</form>
+                    <option
+                        value="ast"
+
+                    >
+                        Asturianu
+                    </option>
+
+                    <option
+                        value="ca"
+
+                    >
+                        Català
+                    </option>
+
+                    <option
+                        value="cs"
+
+                    >
+                        Český
+                    </option>
+
+                    <option
+                        value="da"
+
+                    >
+                        Dansk
+                    </option>
+
+                    <option
+                        value="de"
+
+                    >
+                        Deutsch
+                    </option>
+
+                    <option
+                        value="el"
+
+                    >
+                        Ελληνικά
+                    </option>
+
+                    <option
+                        value="en"
+
+                        selected="selected"
+
+                    >
+                        English
+                    </option>
+
+                    <option
+                        value="es"
+
+                    >
+                        Español
+                    </option>
+
+                    <option
+                        value="es_419"
+
+                    >
+                        Español (Latinoamérica)
+                    </option>
+
+                    <option
+                        value="fi"
+
+                    >
+                        Suomi
+                    </option>
+
+                    <option
+                        value="fr"
+
+                    >
+                        Français
+                    </option>
+
+                    <option
+                        value="he"
+
+                    >
+                        עברית
+                    </option>
+
+                    <option
+                        value="hr"
+
+                    >
+                        Hrvatski
+                    </option>
+
+                    <option
+                        value="hu"
+
+                    >
+                        Magyar
+                    </option>
+
+                    <option
+                        value="it"
+
+                    >
+                        Italiano
+                    </option>
+
+                    <option
+                        value="ja"
+
+                    >
+                        日本語
+                    </option>
+
+                    <option
+                        value="nb"
+
+                    >
+                        Norsk
+                    </option>
+
+                    <option
+                        value="nl"
+
+                    >
+                        Nederlands
+                    </option>
+
+                    <option
+                        value="pl"
+
+                    >
+                        Polski
+                    </option>
+
+                    <option
+                        value="pt_BR"
+
+                    >
+                        Português (Brasil)
+                    </option>
+
+                    <option
+                        value="pt_PT"
+
+                    >
+                        Português (Portugal)
+                    </option>
+
+                    <option
+                        value="ro"
+
+                    >
+                        Română
+                    </option>
+
+                    <option
+                        value="ru"
+
+                    >
+                        Русский
+                    </option>
+
+                    <option
+                        value="sk"
+
+                    >
+                        Slovenčina
+                    </option>
+
+                    <option
+                        value="sr"
+
+                    >
+                        Srpski
+                    </option>
+
+                    <option
+                        value="tr"
+
+                    >
+                        Türkçe
+                    </option>
+
+                    <option
+                        value="uk"
+
+                    >
+                        Українська
+                    </option>
+
+                    <option
+                        value="zh_CN"
+
+                    >
+                        简体中文
+                    </option>
+
+                    <option
+                        value="zh_TW"
+
+                    >
+                        正體中文
+                    </option>
+
+                </select>
+
+                <!-- Pass our current url path as next. -->
+                <input type="hidden" name="next" value="/packages">
+
+                <!-- Pass query_params over to /language via POST. -->
+                <input type="hidden" name="q" value="K=jaysonsantos&amp;SeB=m">
+
+                <input type="submit" value="Go">
+            </div>
+        </fieldset>
+    </form>
 </div>
-			<!-- End of main content -->
+    <div id="archdev-navbar">
+    <ul>
 
-			<div id="footer">
-								<p>aurweb <a href="https://git.archlinux.org/aurweb.git/log/?h=v5.0.0">v5.0.0</a></p>
-								<p>Copyright &copy; 2004-2021 aurweb Development Team.</p>
-				<p>AUR packages are user produced content. Any use of the provided files is at your own risk.</p>
-			</div>
-		</div>
-	</body>
-</html>
+
+            <li><a href="/">AUR Home</a></li>
+
+
+
+        <li><a href="/packages">Packages</a></li>
+
+
+
+            <li><a href="/register">Register</a></li>
+
+
+            <li><a href="/login?next=/packages">Login</a></li>
+
+    </ul>
+</div>
+
+
+
+
+
+
+
+
+
+
+        <div id="pkglist-search" class="box filter-criteria">
+    <h2>Search Criteria</h2>
+    <form action='/packages' method='get'>
+        <p><input type='hidden' name='O' value='0'/></p>
+
+        <fieldset>
+            <legend>Enter search criteria</legend>
+            <div>
+                <label for="id_method">Search by</label>
+                <select name='SeB'>
+                    <option value="nd" >Name, Description</option>
+                    <option value="n" >Name Only</option>
+                    <option value="b" >Package Base</option>
+                    <option value="N" >Exact Name</option>
+                    <option value="B" >Exact Package Base</option>
+                    <option value="k" >Keywords</option>
+                    <option value="m" selected>Maintainer</option>
+                    <option value="c" >Co-maintainer</option>
+                    <option value="M" >Maintainer, Co-maintainer</option>
+                    <option value="s" >Submitter</option>
+                </select>
+            </div>
+            <div>
+                <label for="id_q">Keywords</label>
+                <input type='text' name='K' size='30' value="jaysonsantos" maxlength='35'/>
+            </div>
+            <div>
+                <label for="id_out_of_date">Out of Date</label>
+                <select name='outdated'>
+                    <option value=''>All</option>
+                    <option value='on' >Flagged</option>
+                    <option value='off' >Not Flagged</option>
+                </select>
+            </div>
+            <div>
+                <label for="id_sort_by">Sort by</label>
+
+
+
+                <select name='SB'>
+                    <option value='n' >Name</option>
+                    <option value='v' >Votes</option>
+                    <option value='p' selected>Popularity</option>
+                    <option value='w' >Voted</option>
+                    <option value='o' >Notify</option>
+                    <option value='m' >Maintainer</option>
+                    <option value='l' >Last modified</option>
+                </select>
+            </div>
+            <div>
+                <label for="id_order_by">Sort order</label>
+
+
+
+                <select name='SO'>
+                    <option value='a' >Ascending</option>
+                    <option value='d' selected>Descending</option>
+                </select>
+            </div>
+            <div>
+                <label for="id_per_page">Per page</label>
+                <select name='PP'>
+                    <option value="50" selected>50</option>
+                    <option value="100" >100</option>
+                    <option value="250" >250</option>
+                </select>
+            </div>
+            <div>
+                <label>&nbsp;</label>
+                <button type='submit' class='button' name='submit' value='Go'>
+                    Go
+                </button>
+                <button type='submit' class='button' name='submit' value='Orphans'>
+                    Orphans
+                </button>
+            </div>
+        </fieldset>
+    </form>
+</div>
+        <div id="pkglist-results" class="box">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="pkglist-stats">
+    <p>
+        10 packages found.
+
+            Page 1 of 1.
+
+    </p>
+
+</div>
+
+
+
+            <form id="pkglist-results-form"
+                  action="/packages?K=jaysonsantos&amp;SeB=m" method="post"
+            >
+
+
+
+
+<table  class="results">
+    <thead>
+        <tr>
+
+            <th>
+
+
+
+                <a href="/packages?K=jaysonsantos&amp;SeB=m&amp;O=0&amp;SB=n&amp;SO=d">
+                    Name
+                </a>
+            </th>
+            <th>Version</th>
+            <th>
+
+
+
+                <a href="/packages?K=jaysonsantos&amp;SeB=m&amp;O=0&amp;SB=v&amp;SO=d">
+                    Votes
+                </a>
+            </th>
+            <th>
+
+
+
+                <a href="/packages?K=jaysonsantos&amp;SeB=m&amp;O=0&amp;SB=p&amp;SO=a">Popularity</a><span title="Popularity is calculated as the sum of all votes with each vote being weighted with a factor of 0.98 per day since its creation." class="hover-help"><sup>?</sup></span>
+            </th>
+
+            <th>Description</th>
+            <th>
+
+
+
+                <a href="/packages?K=jaysonsantos&amp;SeB=m&amp;O=0&amp;SB=m&amp;SO=d">
+                    Maintainer
+                </a>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+
+
+            <tr>
+
+                <td>
+                    <a href="/packages/act-bin">
+                        act-bin
+                    </a>
+                </td>
+
+                    <td class="flagged">0.2.25-0</td>
+
+                <td>3</td>
+                <td>
+                    0.08
+                </td>
+
+                <td class="wrap">Run your GitHub Actions locally</td>
+                <td>
+
+                        <a href="/account/jaysonsantos">
+                            jaysonsantos
+                        </a>
+
+                </td>
+            </tr>
+
+
+            <tr>
+
+                <td>
+                    <a href="/packages/python-commitizen">
+                        python-commitizen
+                    </a>
+                </td>
+
+                    <td class="flagged">2.20.4-0</td>
+
+                <td>2</td>
+                <td>
+                    0.01
+                </td>
+
+                <td class="wrap">Create committing rules for projects, auto bump versions, and auto changelog generation</td>
+                <td>
+
+                        <a href="/account/jaysonsantos">
+                            jaysonsantos
+                        </a>
+
+                </td>
+            </tr>
+
+
+            <tr>
+
+                <td>
+                    <a href="/packages/python-decli">
+                        python-decli
+                    </a>
+                </td>
+
+                    <td>0.5.2-0</td>
+
+                <td>0</td>
+                <td>
+                    0.00
+                </td>
+
+                <td class="wrap">Minimal, easy to use, declarative command line interface tool</td>
+                <td>
+
+                        <a href="/account/jaysonsantos">
+                            jaysonsantos
+                        </a>
+
+                </td>
+            </tr>
+
+
+            <tr>
+
+                <td>
+                    <a href="/packages/python-configupdater">
+                        python-configupdater
+                    </a>
+                </td>
+
+                    <td class="flagged">3.0.1-1</td>
+
+                <td>0</td>
+                <td>
+                    0.00
+                </td>
+
+                <td class="wrap">Parser like ConfigParser but for updating configuration files</td>
+                <td>
+
+                        <a href="/account/jaysonsantos">
+                            jaysonsantos
+                        </a>
+
+                </td>
+            </tr>
+
+
+            <tr>
+
+                <td>
+                    <a href="/packages/python-autorepr">
+                        python-autorepr
+                    </a>
+                </td>
+
+                    <td>0.3.0-1</td>
+
+                <td>0</td>
+                <td>
+                    0.00
+                </td>
+
+                <td class="wrap">Makes civilized __repr__, __str__, and __unicode__ methods</td>
+                <td>
+
+                        <a href="/account/jaysonsantos">
+                            jaysonsantos
+                        </a>
+
+                </td>
+            </tr>
+
+
+            <tr>
+
+                <td>
+                    <a href="/packages/nitpick">
+                        nitpick
+                    </a>
+                </td>
+
+                    <td class="flagged">0.26.0-1</td>
+
+                <td>0</td>
+                <td>
+                    0.00
+                </td>
+
+                <td class="wrap">Enforce the same settings across multiple language-independent projects</td>
+                <td>
+
+                        <a href="/account/jaysonsantos">
+                            jaysonsantos
+                        </a>
+
+                </td>
+            </tr>
+
+
+            <tr>
+
+                <td>
+                    <a href="/packages/mambembe-cli-without-keyring-bin">
+                        mambembe-cli-without-keyring-bin
+                    </a>
+                </td>
+
+                    <td>0.1.1-0</td>
+
+                <td>0</td>
+                <td>
+                    0.00
+                </td>
+
+                <td class="wrap">Opensource Authy command line client (without keyring support)</td>
+                <td>
+
+                        <a href="/account/jaysonsantos">
+                            jaysonsantos
+                        </a>
+
+                </td>
+            </tr>
+
+
+            <tr>
+
+                <td>
+                    <a href="/packages/gossm-bin">
+                        gossm-bin
+                    </a>
+                </td>
+
+                    <td class="flagged">1.4.4-1</td>
+
+                <td>0</td>
+                <td>
+                    0.00
+                </td>
+
+                <td class="wrap">Interactive CLI tool that you can connect to ec2 using commands same as start-session, ssh in AWS SSM Session Manager</td>
+                <td>
+
+                        <a href="/account/jaysonsantos">
+                            jaysonsantos
+                        </a>
+
+                </td>
+            </tr>
+
+
+            <tr>
+
+                <td>
+                    <a href="/packages/clever-reposync-bin">
+                        clever-reposync-bin
+                    </a>
+                </td>
+
+                    <td>0.7.0-0</td>
+
+                <td>0</td>
+                <td>
+                    0.00
+                </td>
+
+                <td class="wrap">Sync repos for a GitHub user or organization into a folder on your computer</td>
+                <td>
+
+                        <a href="/account/jaysonsantos">
+                            jaysonsantos
+                        </a>
+
+                </td>
+            </tr>
+
+
+            <tr>
+
+                <td>
+                    <a href="/packages/balde">
+                        balde
+                    </a>
+                </td>
+
+                    <td>0.1.2-2</td>
+
+                <td>0</td>
+                <td>
+                    0.00
+                </td>
+
+                <td class="wrap">A microframework for C based on GLib and bad intentions.</td>
+                <td>
+
+                        <a href="/account/jaysonsantos">
+                            jaysonsantos
+                        </a>
+
+                </td>
+            </tr>
+
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+<div class="pkglist-stats">
+    <p>
+        10 packages found.
+
+            Page 1 of 1.
+
+    </p>
+
+</div>
+
+
+
+            </form>
+        </div>
+
+
+
+
+    <div id="footer">
+    <p>
+        aurweb <a href="https://gitlab.archlinux.org/archlinux/aurweb/-/commits/v6.0.25">v6.0.25</a>
+
+    </p>
+    <p>Report issues <a href="https://gitlab.archlinux.org/archlinux/aurweb/-/issues/new?issuable_template=Bug">here</a>.</p>
+    <p>Copyright &copy; 2004-2022 aurweb Development Team.</p>
+    <p>AUR packages are user produced content. Any use of the provided files is at your own risk.</p>
+</div>
+</div>
