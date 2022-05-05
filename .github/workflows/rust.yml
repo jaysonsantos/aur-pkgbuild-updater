@@ -36,7 +36,7 @@ jobs:
           cargo build --release --verbose
 
       - name: Log in to the Container registry
-        uses: docker/login-action@3a136a8631bbc4ca05cc2f33d3a19059e9255bae
+        uses: docker/login-action@d398f07826957cd0a18ea1b059cf1207835e60bc
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
@@ -44,12 +44,12 @@ jobs:
 
       - name: Extract metadata (tags, labels) for Docker
         id: meta
-        uses: docker/metadata-action@69f6fc9d46f2f8bf0d5491e4aabe0bb8c6a4678a
+        uses: docker/metadata-action@8d56fe93cf3fd680736a906389438c1ed74d75f7
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
       - name: Build and push Docker image
-        uses: docker/build-push-action@ba317382dcde9f7deb318467fc6cd7230d8b1714
+        uses: docker/build-push-action@c5e6528d5ddefc82f682165021e05edf58044bce
         with:
           context: .
           push: true
