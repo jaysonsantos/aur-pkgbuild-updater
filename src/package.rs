@@ -51,7 +51,7 @@ impl Package {
         }
     }
 
-    #[instrument(skip(self), fields(name = self.name.as_str()))]
+    #[instrument(skip(self), fields(name = self.name.as_str()), err)]
     pub async fn process(&mut self) -> Result<()> {
         info!("Processing");
         self.clone_repository().await?;
@@ -89,7 +89,7 @@ impl Package {
             .collect()
     }
 
-    #[instrument(skip(self))]
+    #[instrument(skip(self), fields(clone_directory = %self.clone_directory), err)]
     async fn clone_repository(&self) -> Result<()> {
         if self.clone_directory.exists() {
             return Ok(());
