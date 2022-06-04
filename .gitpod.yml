@@ -1,5 +1,5 @@
 image:
-  file: base.Dockerfile
+  file: tests.Dockerfile
 
 tasks:
   - name: Dependencies
