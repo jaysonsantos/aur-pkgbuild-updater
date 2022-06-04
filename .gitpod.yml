@@ -4,7 +4,7 @@ image:
 tasks:
   - name: Dependencies
     init: |
-      yay -Syu --noconfirm rust
+      yay -Syu --noconfirm rust docker
   - name: Build
     init: cargo build
   - name: Clippy
