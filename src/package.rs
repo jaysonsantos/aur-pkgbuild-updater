@@ -1,3 +1,5 @@
+use std::env;
+
 use camino::Utf8PathBuf;
 use color_eyre::{
     eyre::{eyre, WrapErr},
@@ -51,7 +53,7 @@ impl Package {
         }
     }
 
-    #[instrument(skip(self), fields(name = self.name.as_str()))]
+    #[instrument(skip(self), fields(name = self.name.as_str()), err)]
     pub async fn process(&mut self) -> Result<()> {
         info!("Processing");
         self.clone_repository().await?;
@@ -89,7 +91,7 @@ impl Package {
             .collect()
     }
 
-    #[instrument(skip(self))]
+    #[instrument(skip(self), fields(clone_directory = %self.clone_directory), err)]
     async fn clone_repository(&self) -> Result<()> {
         if self.clone_directory.exists() {
             return Ok(());
@@ -234,7 +236,10 @@ impl Package {
         fs::write(&pkg_build_file, contents).await?;
 
         let response = Command::new("makepkg")
-            .args(&["--clean", "--force", "--syncdeps", "--noconfirm"])
+            .args(&["--force", "--syncdeps", "--noconfirm"])
+            // Some variables can interfer with packages like coveralls with git commiter name
+            .env_clear()
+            .env("PATH", env::var("PATH").unwrap_or_default())
             .env("PACMAN", "yay") // Use yay so it can handle AUR dependencies
             .env("PACMAN_AUTH", "nice") // Small hack so makepkg doesn't try to use sudo
             .current_dir(&self.clone_directory)

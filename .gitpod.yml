@@ -1,7 +1,10 @@
+image:
+  file: base.Dockerfile
+
 tasks:
   - name: Dependencies
     init: |
-      sudo apt update && DEBIAN_FRONTEND=noninteractive sudo apt install -y libsasl2-dev
+      yay -Syu --noconfirm rust rust-src docker
   - name: Build
     init: cargo build
   - name: Clippy
