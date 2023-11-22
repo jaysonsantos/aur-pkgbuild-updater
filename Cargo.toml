@@ -25,7 +25,7 @@ tokio = { version = "1.17.0", features = ["full"] }
 tracing = "0.1.35"
 tracing-error = "0.2.0"
 tracing-subscriber = { version = "0.3.11", features = ["env-filter"] }
-url = "2.2.2"
+url = "2.5.0"
 
 [dev-dependencies]
 tempdir = "0.3.7"
