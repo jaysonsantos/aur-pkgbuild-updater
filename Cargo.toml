@@ -14,7 +14,7 @@ directories = "6.0.0"
 futures = "0.3.30"
 lazy_static = "1.4.0"
 lenient_semver = "0.4.2"
-reqwest = { version = "0.12.4", features = ["json", "stream"] }
+reqwest = { version = "0.13.0", features = ["json", "stream"] }
 scraper = "0.25.0"
 semver = { version = "1.0.22", features = ["serde"] }
 serde = { version = "1.0.200", features = ["derive"] }
